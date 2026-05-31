@@ -1,0 +1,80 @@
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class Pickup : MonoBehaviour
+{
+    public Material highlightMaterial;
+    public GameObject weaponPrefab;
+    public float lookRange = 3f;
+
+    private Material[] originalMaterials;
+    private MeshRenderer[] meshRenderers;
+    private bool isLookedAt = false;
+    private Camera playerCam;
+    private PlayerShooting player;
+
+    void Start()
+    {
+        meshRenderers = GetComponentsInChildren<MeshRenderer>();
+        originalMaterials = new Material[meshRenderers.Length];
+
+        for (int i = 0; i < meshRenderers.Length; i++)
+        {
+            originalMaterials[i] = meshRenderers[i].material;
+        }
+
+        player = FindAnyObjectByType<PlayerShooting>();
+        playerCam = player.GetComponentInChildren<Camera>();
+    }
+
+    void Update()
+    {
+        Ray ray = new Ray(playerCam.transform.position, playerCam.transform.forward);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, lookRange))
+        {
+            if (hit.collider.GetComponentInParent<Pickup>() == this)
+            {
+                SetLookedAt(true);
+                return;
+            }
+        }
+
+        SetLookedAt(false);
+    }
+
+    void SetLookedAt(bool lookedAt)
+    {
+        isLookedAt = lookedAt;
+
+        if (lookedAt)
+        {
+            foreach (MeshRenderer mr in meshRenderers)
+            {
+                mr.material = highlightMaterial;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < meshRenderers.Length; i++)
+            {
+                meshRenderers[i].material = originalMaterials[i];
+            }
+        }
+    }
+
+    void OnPickup()
+    {
+        if (!isLookedAt) return;
+
+        player.OnDrop();
+
+        GameObject newWeapon = Instantiate(weaponPrefab, player.gunHolder);
+        newWeapon.transform.localPosition = Vector3.zero;
+        newWeapon.transform.localRotation = Quaternion.identity;
+
+        player.gun = newWeapon.GetComponent<Gun>();
+
+        Destroy(gameObject);
+    }
+}
