@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Photon.Pun;
 
-public class Pickup : MonoBehaviour
+public class Pickup : MonoBehaviourPun
 {
     public Material highlightMaterial;
     public GameObject weaponPrefab;
@@ -23,12 +24,23 @@ public class Pickup : MonoBehaviour
             originalMaterials[i] = meshRenderers[i].material;
         }
 
-        player = FindAnyObjectByType<PlayerShooting>();
+        // Find only the LOCAL player
+        foreach (PlayerShooting ps in FindObjectsByType<PlayerShooting>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+        {
+            if (ps.photonView.IsMine)
+            {
+                player = ps;
+                break;
+            }
+        }
+
         playerCam = player.GetComponentInChildren<Camera>();
     }
 
     void Update()
     {
+        if (player == null) return;
+
         Ray ray = new Ray(playerCam.transform.position, playerCam.transform.forward);
 
         if (Physics.Raycast(ray, out RaycastHit hit, lookRange))
@@ -66,6 +78,7 @@ public class Pickup : MonoBehaviour
     void OnPickup()
     {
         if (!isLookedAt) return;
+        if (player == null) return;
 
         player.OnDrop();
 

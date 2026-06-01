@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Photon.Pun;
 
-public class PlayerShooting : MonoBehaviour
+public class PlayerShooting : MonoBehaviourPun
 {
     public Gun gun;
     public Transform gunHolder;
@@ -10,6 +11,7 @@ public class PlayerShooting : MonoBehaviour
 
     void Update()
     {
+        if (!photonView.IsMine) return;
         if (isHoldingShoot && gun != null)
         {
             gun.Shoot();
@@ -18,24 +20,25 @@ public class PlayerShooting : MonoBehaviour
 
     void OnShoot()
     {
+        if (!photonView.IsMine) return;
         isHoldingShoot = true;
     }
 
     void OnShootRelease()
     {
+        if (!photonView.IsMine) return;
         isHoldingShoot = false;
     }
 
     void OnReload()
     {
-        if (gun != null)
-        {
-            gun.TryReload();
-        }
+        if (!photonView.IsMine) return;
+        if (gun != null) gun.TryReload();
     }
 
     public void OnDrop()
     {
+        if (!photonView.IsMine) return;
         if (gun != null)
         {
             gun.Drop();

@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Photon.Pun;
 
-public class Playermovement : MonoBehaviour
+public class Playermovement : MonoBehaviourPun
 {
     public float moveSpeed = 5f;
     public float jumpForce = 5f;
@@ -13,31 +14,33 @@ public class Playermovement : MonoBehaviour
     private Rigidbody rb;
     private Vector2 moveInput;
     private bool isGrounded;
-    private PlayerInput playerInput;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        playerInput = new PlayerInput();
     }
 
     void Update()
     {
+        if (!photonView.IsMine) return;
         CheckGround();
     }
 
     void FixedUpdate()
     {
+        if (!photonView.IsMine) return;
         MovePlayer();
     }
 
     void OnMovement(InputValue value)
     {
+        if (!photonView.IsMine) return;
         moveInput = value.Get<Vector2>();
     }
 
     void OnJump()
     {
+        if (!photonView.IsMine) return;
         if (isGrounded)
         {
             rb.AddForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);

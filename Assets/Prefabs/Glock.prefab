@@ -100,6 +100,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5738456080911321149}
   - component: {fileID: 681048950336280096}
+  - component: {fileID: -2507737548912847391}
   m_Layer: 0
   m_Name: Glock
   m_TagString: Untagged
@@ -148,6 +149,28 @@ MonoBehaviour:
   bulletSpawnPoint: {fileID: 5436540800791119468}
   weaponFlash: {fileID: 5296324847464295409, guid: b48cf7dfed0be4e4e8a4199a68396e41, type: 3}
   droppedWeapon: {fileID: 4965438261709640327, guid: 70f14ed8d8ff9bd4a84a9b3356ac0d00, type: 3}
+--- !u!114 &-2507737548912847391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4965438261709640327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &5418257746661050049
 GameObject:
   m_ObjectHideFlags: 0
@@ -173,7 +196,7 @@ Transform:
   m_GameObject: {fileID: 5418257746661050049}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.603, y: 0.0685, z: 0.013}
+  m_LocalPosition: {x: 0, y: 0.0685, z: 0.013}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

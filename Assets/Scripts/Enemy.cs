@@ -1,3 +1,7 @@
+/* If you're reading this file, lemme tell you about it. I originally planned for this game to be singleplayer. This is enemy bot script (still making) but I chose to make this a multiplayer game. I just wanted to keep this script. Dont ask me reason why :) 
+Keep exploring  */
+
+/*
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
@@ -8,7 +12,6 @@ public class Enemy : MonoBehaviour
     public int health = 100;
     public Material hitMat;
 
-    // AI Settings
     public int currentPointIndex = 0;
     public Vector3 currentTarget;
     public float positionThreshold;
@@ -115,7 +118,6 @@ public class Enemy : MonoBehaviour
         idleTimeCounter = idleTime;
         agent.ResetPath();
 
-        // shoot - to be added in next episode
 
         if (Vector3.Distance(transform.position, playerTransform.position) > attackDistance || !canSeePlayer)
         {
@@ -215,4 +217,6 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         rend.material = originalMaterial;
     }
-}
+} 
+
+*/

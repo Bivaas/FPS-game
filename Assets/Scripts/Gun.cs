@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections;
+using Photon.Pun;
 
-public class Gun : MonoBehaviour
+public class Gun : MonoBehaviourPun
 {
     public float reloadTime = 1f;
     public float fireRate = 0.15f;
@@ -20,12 +21,14 @@ public class Gun : MonoBehaviour
     private Quaternion initialRotation;
     private Vector3 initialPosition;
     private Vector3 reloadRotationOffset = new Vector3(66, 50, 50);
+    private Camera cam;
 
     void Start()
     {
         currentAmmo = magSize;
         initialRotation = transform.localRotation;
         initialPosition = transform.localPosition;
+        cam = GetComponentInParent<PlayerShooting>().GetComponentInChildren<Camera>();
     }
 
     public void Shoot()
@@ -45,8 +48,33 @@ public class Gun : MonoBehaviour
         nextTimeToFire = Time.time + fireRate;
         currentAmmo--;
 
-        Instantiate(bullet, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
+        Ray ray = new Ray(cam.transform.position, cam.transform.forward);
+    
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+        {
+            PlayerHealth health = hit.collider.GetComponentInParent<PlayerHealth>();
+            if (health != null)
+            {
+                health.photonView.RPC("RPC_TakeDamage", RpcTarget.AllViaServer, 10);
+            }
+        }
+        
+        Vector3 targetPoint = ray.GetPoint(100f);
+        if (Physics.Raycast(ray, out RaycastHit visualHit, 100f))
+        {
+            targetPoint = visualHit.point;
+        }
+
+        Vector3 direction = (targetPoint - bulletSpawnPoint.position).normalized;
+        Quaternion bulletRotation = Quaternion.LookRotation(direction);
         Instantiate(weaponFlash, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
+
+        GameObject bulletObj = Instantiate(bullet, bulletSpawnPoint.position, bulletRotation);
+        Rigidbody bulletRb = bulletObj.GetComponent<Rigidbody>();
+        if (bulletRb != null)
+        {
+            bulletRb.linearVelocity = direction * 30f;
+        }
     }
 
     public void TryReload()
