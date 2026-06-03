@@ -100,7 +100,8 @@ public class PlayerHealth : MonoBehaviourPun
             Vector3 dropPos = transform.position + Vector3.up * 0.5f;
             Quaternion dropRot = Quaternion.Euler(0, transform.eulerAngles.y, 0);
 
-            PhotonNetwork.Instantiate("AR Dropped)". dropPos, dropRot);
+            string prefabName = GameManager.Instance.arPickupPrefab.name;
+            PhotonNetwork.Instantiate(prefabName, dropPos, dropRot);
         }
     }
 

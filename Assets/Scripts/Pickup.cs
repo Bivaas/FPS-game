@@ -88,6 +88,15 @@ public class Pickup : MonoBehaviourPun
 
         player.gun = newWeapon.GetComponent<Gun>();
 
-        Destroy(gameObject);
+        photonView.RPC(nameof(RPC_DestroyPickup), RpcTarget.MasterClient);
+    }
+
+    [PunRPC]
+    void RPC_DestroyPickup()
+    {
+        if (PhotonNetwork.IsMasterClient && gameObject != null)
+        {
+            PhotonNetwork.Destroy(gameObject);
+        }
     }
 }
