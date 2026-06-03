@@ -6,6 +6,8 @@ public class PlayerShooting : MonoBehaviourPun
 {
     public Gun gun;
     public Transform gunHolder;
+    public GameObject glockPrefab;
+    public GameObject arPrefab;
 
     private bool isHoldingShoot;
 
@@ -44,5 +46,31 @@ public class PlayerShooting : MonoBehaviourPun
             gun.Drop();
             gun = null;
         }
+    }
+
+    public void EquipWeapon(string weaponName)
+    {
+        photonView.RPC(nameof(RPC_EquipWeapon), RpcTarget.AllBuffered, weaponName);
+    }
+
+    [PunRPC]
+    void RPC_EquipWeapon(string weaponName)
+    {
+        if (gun != null)
+        {
+            Destroy(gun.gameObject);
+            gun = null;
+        }
+
+        GameObject prefabToSpawn = null;
+        if (weaponName == "Glock") prefabToSpawn = glockPrefab;
+        else if (weaponName == "AR") prefabToSpawn = arPrefab;
+
+        if (prefabToSpawn == null || gunHolder == null) return;
+
+        GameObject newWeapon = Instantiate(prefabToSpawn, gunHolder);
+        newWeapon.transform.localPosition = Vector3.zero;
+        newWeapon.transform.localRotation = Quaternion.identity;
+        gun = newWeapon.GetComponent<Gun>();
     }
 }

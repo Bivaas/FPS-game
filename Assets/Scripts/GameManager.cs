@@ -41,12 +41,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, spawnPoint.position, spawnPoint.rotation);
 
         PlayerShooting playerShooting = player.GetComponent<PlayerShooting>();
-        if (playerShooting != null && playerShooting.gunHolder != null)
+        if (playerShooting != null)
         {
-            GameObject glock = Instantiate(glockPrefab, playerShooting.gunHolder);
-            glock.transform.localPosition = Vector3.zero;
-            glock.transform.localRotation = Quaternion.identity;
-            playerShooting.gun = glock.GetComponent<Gun>();
+            playerShooting.EquipWeapon("Glock");
         }
         
 

@@ -15,14 +15,45 @@ public class PlayerLook : MonoBehaviourPun
     {
         if (!photonView.IsMine)
         {
-            cam.gameObject.SetActive(false);
+            Camera camComponent = cam.GetComponent<Camera>();
+            if (camComponent != null) camComponent.enabled = false;
+
+            AudioListener audio = cam.GetComponent<AudioListener>();
+            if (audio != null) audio.enabled = false;
+
             return;
         }
 
         mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 50f);
 
+        SetLayerForLocalBody();
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+
+    void SetLayerForLocalBody()
+    {
+        int localBodyLayer = LayerMask.NameToLayer("LocalPlayerBody");
+        if (localBodyLayer < 0) return;
+
+        foreach (Transform child in transform)
+        {
+            if (child.name == "Eyes" || child.name == "Mouth")
+            {
+                SetLayerRecursive(child.gameObject, localBodyLayer);
+            }
+        }
+    }
+
+    void SetLayerRecursive(GameObject obj, int layer)
+    {
+        obj.layer = layer;
+
+        foreach  (Transform child in obj.transform)
+        {
+            SetLayerRecursive(child.gameObject, layer);
+        }
     }
 
     void Update()

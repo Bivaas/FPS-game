@@ -80,13 +80,8 @@ public class Pickup : MonoBehaviourPun
         if (!isLookedAt) return;
         if (player == null) return;
 
-        player.OnDrop();
-
-        GameObject newWeapon = Instantiate(weaponPrefab, player.gunHolder);
-        newWeapon.transform.localPosition = Vector3.zero;
-        newWeapon.transform.localRotation = Quaternion.identity;
-
-        player.gun = newWeapon.GetComponent<Gun>();
+       string weaponName = weaponPrefab.name.Contains("AR") ? "AR" : "Glock";
+       player.EquipWeapon(weaponName);
 
         photonView.RPC(nameof(RPC_DestroyPickup), RpcTarget.MasterClient);
     }

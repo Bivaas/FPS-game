@@ -108,22 +108,8 @@ public class PlayerHealth : MonoBehaviourPun
     void EquipDefaultGlock()
     {
         PlayerShooting ps = GetComponent<PlayerShooting>();
-        if (ps == null || ps.gunHolder == null) return;
-
-        if (ps.gun != null)
-        {
-            Destroy(ps.gun.gameObject);
-            ps.gun = null;
-        }
-
-        GameObject glockPrefab = GameManager.Instance.glockPrefab;
-        if (glockPrefab != null)
-        {
-            GameObject newGlock = Instantiate(glockPrefab, ps.gunHolder);
-            newGlock.transform.localPosition = Vector3.zero;
-            newGlock.transform.localRotation = Quaternion.identity;
-            ps.gun = newGlock.GetComponent<Gun>();
-        }
+        if (ps == null) return;
+        ps.EquipWeapon("Glock");
     }
 
     void Respawn()

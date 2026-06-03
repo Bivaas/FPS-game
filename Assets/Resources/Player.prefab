@@ -230,6 +230,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerShooting
   gun: {fileID: 0}
   gunHolder: {fileID: 622800193322099466}
+  glockPrefab: {fileID: 4965438261709640327, guid: a35b8c32acba1334b9b31dfe8cdbc9be, type: 3}
+  arPrefab: {fileID: 5786097810451525583, guid: 260ff1508afea5241b6511d8fbe92201, type: 3}
 --- !u!114 &282710076086045239
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -328,7 +330,7 @@ GameObject:
   - component: {fileID: 8569145527852898232}
   - component: {fileID: 1358916525422876772}
   - component: {fileID: 7079132153618598791}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Mouth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -471,7 +473,7 @@ GameObject:
   - component: {fileID: 7566425352711790848}
   - component: {fileID: 5536260693961142677}
   - component: {fileID: 3197037725880398133}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Eyes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
