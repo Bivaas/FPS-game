@@ -9,6 +9,7 @@ public class PlayerLook : MonoBehaviourPun
 
     private float xRotation = 0f;
     private Vector2 lookInput;
+    private bool isPaused = false;
 
     void Start()
     {
@@ -18,6 +19,8 @@ public class PlayerLook : MonoBehaviourPun
             return;
         }
 
+        mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 50f);
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -25,6 +28,7 @@ public class PlayerLook : MonoBehaviourPun
     void Update()
     {
         if (!photonView.IsMine) return;
+        if (isPaused) return;
         HandleMouseLook();
     }
 
@@ -44,5 +48,16 @@ public class PlayerLook : MonoBehaviourPun
 
         cam.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
+    }
+        public void SetSensitivity(float value)
+    {
+        mouseSensitivity = value;
+        PlayerPrefs.SetFloat("MouseSensitivity", value);
+        PlayerPrefs.Save();
+    }
+
+    public void SetPaused(bool paused)
+    {
+        isPaused = paused;
     }
 }

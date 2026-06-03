@@ -77,10 +77,51 @@ public class PlayerHealth : MonoBehaviourPun
 
     void Die()
     {
+        if (photonView.IsMine)
+        {
+            DropARIfHolding();
+            EquipDefaultGlock();
+        }
+
         gameObject.SetActive(false);
         if (photonView.IsMine)
         {
             Invoke(nameof(Respawn), respawnDelay);
+        }
+    }
+
+    void DropARIfHolding()
+    {
+        PlayerShooting ps = GetComponent<PlayerShooting>();
+        if (ps == null || ps.gun == null) return;
+
+        if (ps.gun.gameObject.name.Contains("AR"))
+        {
+            Vector3 dropPos = transform.position + Vector3.up * 0.5f;
+            Quaternion dropRot = Quaternion.Euler(0, transform.eulerAngles.y, 0);
+
+            PhotonNetwork.Instantiate("AR Dropped)". dropPos, dropRot);
+        }
+    }
+
+    void EquipDefaultGlock()
+    {
+        PlayerShooting ps = GetComponent<PlayerShooting>();
+        if (ps == null || ps.gunHolder == null) return;
+
+        if (ps.gun != null)
+        {
+            Destroy(ps.gun.gameObject);
+            ps.gun = null;
+        }
+
+        GameObject glockPrefab = GameManager.Instance.glockPrefab;
+        if (glockPrefab != null)
+        {
+            GameObject newGlock = Instantiate(glockPrefab, ps.gunHolder);
+            newGlock.transform.localPosition = Vector3.zero;
+            newGlock.transform.localRotation = Quaternion.identity;
+            ps.gun = newGlock.GetComponent<Gun>();
         }
     }
 

@@ -84,6 +84,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         foreach (Player player in PhotonNetwork.PlayerList)
         {
             GameObject row = Instantiate(scoreboardRowPrefab, scoreboardContent);
+            row.transform.localScale = Vector3.one;
             TextMeshProUGUI[] texts = row.GetComponentsInChildren<TextMeshProUGUI>();
 
             int kills = player.CustomProperties.ContainsKey("Kills") ? (int)player.CustomProperties["Kills"] : 0;
@@ -93,6 +94,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             texts[1].text = kills.ToString();
             texts[2].text = deaths.ToString();
         }
+        LayoutRebuilder.ForceRebuildLayoutImmediate(scoreboardContent as RectTransform);
     }
 
     public void LeaveRoom()
