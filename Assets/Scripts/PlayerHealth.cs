@@ -97,23 +97,18 @@ public class PlayerHealth : MonoBehaviourPun
 
         if (respawnText != null)
         {
+            respawnText.text = "Respawning...";
             respawnText.gameObject.SetActive(true);
+        }    
+           
 
-            float timeLeft = respawnDelay;
-            while (timeLeft > 0)
-            {
-                respawnText.text = "Respawning in " + Mathf.CeilToInt(timeLeft) + "...";
-                yield return new WaitForSeconds(1f);
-                timeLeft -= 1f;
-            }
+        yield return new WaitForSeconds(respawnDelay);
 
+        if (respawnText != null)
+        {
             respawnText.gameObject.SetActive(false);
         }
-        else
-        {
-            yield return new WaitForSeconds(respawnDelay);
-        }
-
+        
         Respawn();
     }
 
