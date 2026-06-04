@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 
@@ -10,6 +11,8 @@ public class JoinMessage : MonoBehaviour
     [Header("Timing")]
     public float displayDuration = 4f;
     public float fadeDuration = 1.5f;
+    public float startDelay = 1f; 
+    public Image backdrop;
 
     [Header("Message")]
     [TextArea(2, 4)]
@@ -20,11 +23,15 @@ public class JoinMessage : MonoBehaviour
         if (messageText == null) return;
 
         messageText.text = message;
+        SetAlpha(0f); 
         StartCoroutine(ShowAndFade());
     }
 
     IEnumerator ShowAndFade()
     {
+        yield return new WaitForSeconds(startDelay);
+
+        messageText.gameObject.SetActive(true);
         SetAlpha(1f);
 
         yield return new WaitForSeconds(displayDuration);
@@ -47,5 +54,12 @@ public class JoinMessage : MonoBehaviour
         Color c = messageText.color;
         c.a = a;
         messageText.color = c;
+
+        if (backdrop != null)
+        {
+            Color bgColor = backdrop.color;
+            bgColor.a = a * 0.47f;
+            backdrop.color = bgColor;
+        }
     }
 }

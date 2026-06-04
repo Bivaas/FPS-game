@@ -3,6 +3,7 @@ using System.Collections;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
+using TMPro;
 
 public class PlayerHealth : MonoBehaviourPun
 {
@@ -14,6 +15,7 @@ public class PlayerHealth : MonoBehaviourPun
     private int currentHealth;
     private Renderer rend;
     private Material originalMaterial;
+    private bool isDead = false;
 
     void Start()
     {
@@ -37,8 +39,10 @@ public class PlayerHealth : MonoBehaviourPun
 
         photonView.RPC("RPC_Blink", RpcTarget.All);
 
-        if (currentHealth <= 0)
+        if (currentHealth <= 0 && !isDead)
         {
+            isDead= true;
+
             Player shooter = info.Sender;
             if (shooter != null)
             {
@@ -81,13 +85,36 @@ public class PlayerHealth : MonoBehaviourPun
         {
             DropARIfHolding();
             EquipDefaultGlock();
+            GameManager.Instance.StartCoroutine(RespawnCountdown());
         }
 
         gameObject.SetActive(false);
-        if (photonView.IsMine)
+    }
+
+    IEnumerator RespawnCountdown()
+    {
+        TextMeshProUGUI respawnText = GameManager.Instance.respawnText;
+
+        if (respawnText != null)
         {
-            Invoke(nameof(Respawn), respawnDelay);
+            respawnText.gameObject.SetActive(true);
+
+            float timeLeft = respawnDelay;
+            while (timeLeft > 0)
+            {
+                respawnText.text = "Respawning in " + Mathf.CeilToInt(timeLeft) + "...";
+                yield return new WaitForSeconds(1f);
+                timeLeft -= 1f;
+            }
+
+            respawnText.gameObject.SetActive(false);
         }
+        else
+        {
+            yield return new WaitForSeconds(respawnDelay);
+        }
+
+        Respawn();
     }
 
     void DropARIfHolding()
@@ -121,5 +148,7 @@ public class PlayerHealth : MonoBehaviourPun
         gameObject.SetActive(true);
 
         if (healthBar != null) healthBar.value = maxHealth;
+
+        isDead = false; 
     }
 }
