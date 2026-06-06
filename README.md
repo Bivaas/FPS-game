@@ -18,7 +18,7 @@ I've used free Low Poly FPS weapons lite (for Glock and AR) from unity assetstor
 
 # Use Of AI
 
-Claude helped me understand how other FPS games uses Hitscan. I realized that using physical bullets, managing the accuracy with crosshair due to bulletspawn point being in right hand side (as the side holding gun) was very complicated. Then, it recommended hitscan for me and also helped me with hitscan script. Other than that, I've only used VS code's autocomplete in few cases. 
+Claude helped me understand how other FPS games uses Hitscan. I realized that using physical bullets, managing the accuracy with crosshair due to bulletspawn point being in right hand side (as the side holding gun) was very complicated. Then, it recommended hitscan for me and also helped me with hitscan script. PlayerRespawn also did not worked as I intended so I took help on that as well. Other than that, I've only used VS code's autocomplete in few cases. 
 
 # Extras
 
