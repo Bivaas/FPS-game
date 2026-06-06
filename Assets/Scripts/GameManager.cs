@@ -4,6 +4,7 @@ using TMPro;
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
@@ -37,7 +38,10 @@ public class GameManager : MonoBehaviourPunCallbacks
         };
         PhotonNetwork.LocalPlayer.SetCustomProperties(initialProps);
 
-        Transform spawnPoint = GetRandomSpawnPoint();
+        int uniqueSeed = System.Guid.NewGuid().GetHashCode() ^ (PhotonNetwork.LocalPlayer.ActorNumber * 7919);
+        Random.InitState(uniqueSeed);
+
+        Transform spawnPoint = GetInitialSpawnPoint();
         GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, spawnPoint.position, spawnPoint.rotation);
 
         PlayerShooting playerShooting = player.GetComponent<PlayerShooting>();
@@ -45,7 +49,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             playerShooting.EquipWeapon("Glock");
         }
-        
 
         if (PhotonNetwork.IsMasterClient)
         {
@@ -66,9 +69,87 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    public Transform GetInitialSpawnPoint()
+    {
+        HashSet<int> claimedIndices = new HashSet<int>();
+
+        foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList)
+        {
+            if (p.IsLocal) continue;
+            if (p.CustomProperties.ContainsKey("SpawnIndex"))
+            {
+                claimedIndices.Add((int)p.CustomProperties["SpawnIndex"]);
+            }
+        }
+
+        List<int> available = new List<int>();
+        for (int i = 0; i < spawnPoints.Length; i++)
+        {
+            if (!claimedIndices.Contains(i)) available.Add(i);
+        }
+
+        if (available.Count == 0)
+        {
+            Debug.LogWarning("No available spawn indices, falling back to random");
+            return spawnPoints[Random.Range(0, spawnPoints.Length)];
+        }
+
+        int chosenIndex = available[Random.Range(0, available.Count)];
+
+        PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable { { "SpawnIndex", chosenIndex } });
+
+        return spawnPoints[chosenIndex];
+    }
+
     public Transform GetRandomSpawnPoint()
     {
-        return spawnPoints[Random.Range(0, spawnPoints.Length)];
+        List<Transform> shuffledSpawns = new List<Transform>(spawnPoints);
+        for (int i = shuffledSpawns.Count - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+            Transform temp = shuffledSpawns[i];
+            shuffledSpawns[i] = shuffledSpawns[j];
+            shuffledSpawns[j] = temp;
+        }
+
+        PlayerHealth[] allPlayers = FindObjectsByType<PlayerHealth>(FindObjectsSortMode.None);
+
+        Transform bestSpawn = null;
+        float bestMinDistance = -1f;
+
+        foreach (Transform candidate in shuffledSpawns)
+        {
+            float minDistToAnyPlayer = float.MaxValue;
+
+            foreach (PlayerHealth player in allPlayers)
+            {
+                if (player == null || !player.gameObject.activeInHierarchy) continue;
+
+                float dist = Vector3.Distance(candidate.position, player.transform.position);
+                if (dist < minDistToAnyPlayer)
+                {
+                    minDistToAnyPlayer = dist;
+                }
+            }
+
+            if (minDistToAnyPlayer == float.MaxValue)
+            {
+                return candidate;
+            }
+
+            if (minDistToAnyPlayer > bestMinDistance)
+            {
+                bestMinDistance = minDistToAnyPlayer;
+                bestSpawn = candidate;
+            }
+        }
+
+        if (bestSpawn == null)
+        {
+            return spawnPoints[Random.Range(0, spawnPoints.Length)];
+        }
+
+        return bestSpawn;
     }
 
     void UpdateScoreboard()

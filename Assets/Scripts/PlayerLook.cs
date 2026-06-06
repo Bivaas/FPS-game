@@ -4,7 +4,7 @@ using Photon.Pun;
 
 public class PlayerLook : MonoBehaviourPun
 {
-    public float mouseSensitivity = 50f;
+    public float mouseSensitivity = 30f;
     public Transform cam;
 
     private float xRotation = 0f;
@@ -24,7 +24,7 @@ public class PlayerLook : MonoBehaviourPun
             return;
         }
 
-        mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 50f);
+        mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 30f);
 
         SetLayerForLocalBody();
 

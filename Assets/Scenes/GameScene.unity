@@ -2673,8 +2673,8 @@ MonoBehaviour:
   sensitivityValueText: {fileID: 2069548863}
   resumeButton: {fileID: 507345595}
   leaveButton: {fileID: 584660448}
-  minSensitivity: 10
-  maxSensitivity: 200
+  minSensitivity: 1
+  maxSensitivity: 100
 --- !u!114 &797190802
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3366,10 +3366,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 942935185}
   m_HandleRect: {fileID: 273048141}
   m_Direction: 0
-  m_MinValue: 10
-  m_MaxValue: 200
+  m_MinValue: 1
+  m_MaxValue: 100
   m_WholeNumbers: 1
-  m_Value: 50
+  m_Value: 30
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []

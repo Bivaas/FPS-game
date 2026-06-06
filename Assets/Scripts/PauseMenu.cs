@@ -14,8 +14,8 @@ public class PauseMenu : MonoBehaviour
     public Button leaveButton;
 
     [Header("Sensitivity Range")]
-    public float minSensitivity = 10f;
-    public float maxSensitivity = 200f;
+    public float minSensitivity = 1f;
+    public float maxSensitivity = 100f;
 
     private PlayerLook localPlayerLook;
     private bool isPaused = false;
@@ -29,7 +29,7 @@ public class PauseMenu : MonoBehaviour
 
         sensitivitySlider.minValue = minSensitivity;
         sensitivitySlider.maxValue = maxSensitivity;
-        sensitivitySlider.value = PlayerPrefs.GetFloat("MouseSensitivity", 50f);
+        sensitivitySlider.value = PlayerPrefs.GetFloat("MouseSensitivity", 30f);
         sensitivitySlider.onValueChanged.AddListener(OnSensitivityChanged);
         UpdateSensitivityLabel(sensitivitySlider.value);
     }
