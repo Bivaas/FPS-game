@@ -16,6 +16,11 @@ The center block has an AR with double magazine capacity, double the rate of fir
 
 I've used free Low Poly FPS weapons lite (for Glock and AR) from unity assetstore. (https://assetstore.unity.com/packages/3d/props/guns/low-poly-fps-weapons-lite-245929)
 
+# Known Issues
+
+You can drop weapon with **Q** and re-equip to dupe it, although it works only client side and is not rendered server side :D
+This can be resolved by including drop weapon in masterclient as well (but I didn't since I thought duping looked cool)
+
 # Use Of AI
 
 Claude helped me understand how other FPS games uses Hitscan. I realized that using physical bullets, managing the accuracy with crosshair due to bulletspawn point being in right hand side (as the side holding gun) was very complicated. Then, it recommended hitscan for me and also helped me with hitscan script. PlayerRespawn also did not worked as I intended so I took help on that as well. Other than that, I've only used VS code's autocomplete in few cases. 
